@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTTP Error Defect Report Generator (RAG-based) | TCS Tech Day</title>
+  <meta name="description" content="AI-assisted, RAG-grounded defect report generator for QA engineers. Grounded in MDN HTTP Status Documentation.">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="app-background"></div>
+
+  <div class="container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand-badge">
+        <i class="fa-solid fa-microchip"></i> TCS Technology Day 2026 &bull; IT QA Track
+      </div>
+      <h1>HTTP Error Defect Report Generator <span class="rag-pill">RAG-Powered</span></h1>
+      <p class="subtitle">Instantly transform vague tester notes ("login problem", "404", "500 on submit") into structured, developer-ready defect reports grounded in MDN documentation.</p>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="main-grid">
+
+      <!-- In-page error / status banner -->
+      <div id="statusBanner" class="status-banner hidden"></div>
+      
+      <!-- Input Panel -->
+      <section class="card input-card">
+        <div class="card-header">
+          <div class="card-title">
+            <i class="fa-solid fa-keyboard icon-gradient"></i> Raw Defect Input
+          </div>
+          <span class="badge badge-pulse">FR1 &bull; Status Detector</span>
+        </div>
+        
+        <div class="input-group">
+          <label for="defectInput" class="input-label">Enter raw tester description or status code:</label>
+          <div class="textarea-wrapper">
+            <textarea id="defectInput" rows="4" placeholder="e.g. 'login problem', '404', 'getting 500 error on submit checkout', 'gateway timeout on search'"></textarea>
+            <button id="clearBtn" class="icon-btn-ghost" title="Clear text"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+        </div>
+
+        <!-- Sample Prompts -->
+        <div class="sample-prompts">
+          <span class="sample-label">Quick QA Examples:</span>
+          <div class="pills-container">
+            <button class="sample-pill" data-text="login problem"><i class="fa-solid fa-lock"></i> login problem</button>
+            <button class="sample-pill" data-text="404 page not found"><i class="fa-solid fa-magnifying-glass"></i> 404 page not found</button>
+            <button class="sample-pill" data-text="getting 500 error on submit"><i class="fa-solid fa-server"></i> 500 server crash</button>
+            <button class="sample-pill" data-text="gateway timeout on checkout"><i class="fa-solid fa-clock"></i> gateway timeout</button>
+            <button class="sample-pill" data-text="403 access denied for user"><i class="fa-solid fa-user-slash"></i> 403 access denied</button>
+            <button class="sample-pill" data-text="button alignment off by 5px"><i class="fa-solid fa-bug"></i> non-HTTP bug</button>
+          </div>
+        </div>
+
+        <!-- Candidate Status Codes Bar -->
+        <div id="candidatesSection" class="candidates-section hidden">
+          <div class="candidates-title">
+            <span><i class="fa-solid fa-list-check"></i> Detected Status Code Candidates:</span>
+            <small class="text-muted">(Click candidate to override)</small>
+          </div>
+          <div id="candidatesList" class="candidates-list"></div>
+        </div>
+
+        <!-- Submit Controls -->
+        <div class="action-bar">
+          <button id="generateBtn" class="btn btn-primary btn-glow">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Grounded Report
+          </button>
+          <button id="regenerateBtn" class="btn btn-secondary hidden">
+            <i class="fa-solid fa-rotate"></i> Regenerate
+          </button>
+        </div>
+      </section>
+
+      <!-- Results Grid (Generated Report + Transparency RAG Panel) -->
+      <section id="resultsContainer" class="results-container hidden">
+        
+        <!-- Generated Defect Report Card -->
+        <div class="card report-card">
+          <div class="card-header">
+            <div class="card-title">
+              <i class="fa-solid fa-file-lines icon-gradient"></i> Structured Defect Report
+            </div>
+            <div class="report-header-badges">
+              <span id="httpStatusBadge" class="status-code-badge">HTTP 401</span>
+              <span id="severityBadge" class="severity-badge severity-high">High</span>
+              <span id="groundingBadge" class="grounding-badge"><i class="fa-solid fa-shield-halved"></i> MDN Grounded</span>
+            </div>
+          </div>
+
+          <div class="report-content">
+            <!-- Title -->
+            <div class="report-field">
+              <div class="field-label"><i class="fa-solid fa-heading"></i> Defect Title</div>
+              <div id="reportTitle" class="field-value title-value"></div>
+            </div>
+
+            <!-- Likely Cause -->
+            <div class="report-field">
+              <div class="field-label"><i class="fa-solid fa-lightbulb"></i> Likely Cause (MDN Grounded)</div>
+              <div id="reportLikelyCause" class="field-value cause-value"></div>
+            </div>
+
+            <!-- Steps to Reproduce -->
+            <div class="report-field">
+              <div class="field-label"><i class="fa-solid fa-list-ol"></i> Steps to Reproduce (Template)</div>
+              <ol id="reportSteps" class="steps-list"></ol>
+            </div>
+
+            <!-- Expected vs Actual Grid -->
+            <div class="grid-2col">
+              <div class="report-field">
+                <div class="field-label field-expected"><i class="fa-solid fa-circle-check"></i> Expected Result</div>
+                <div id="reportExpected" class="field-value expected-value"></div>
+              </div>
+              <div class="report-field">
+                <div class="field-label field-actual"><i class="fa-solid fa-circle-xmark"></i> Actual Result</div>
+                <div id="reportActual" class="field-value actual-value"></div>
+              </div>
+            </div>
+
+            <!-- Developer Remediation -->
+            <div class="report-field">
+              <div class="field-label"><i class="fa-solid fa-wrench"></i> Suggested Remediation for Developers</div>
+              <div id="reportRemediation" class="field-value remediation-value"></div>
+            </div>
+
+            <!-- Export / Copy Bar -->
+            <div class="export-bar">
+              <button id="copyTextBtn" class="btn btn-secondary"><i class="fa-regular fa-copy"></i> Copy Text</button>
+              <button id="copyMarkdownBtn" class="btn btn-secondary"><i class="fa-brands fa-markdown"></i> Copy Markdown</button>
+              <button id="copyJiraBtn" class="btn btn-secondary"><i class="fa-solid fa-ticket"></i> Copy Jira Format</button>
+              <button id="exportJsonBtn" class="btn btn-outline"><i class="fa-solid fa-download"></i> Export JSON</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Transparency Panel ("How this was generated") -->
+        <div class="card transparency-card">
+          <div class="card-header">
+            <div class="card-title">
+              <i class="fa-solid fa-eye icon-gradient"></i> "How this was generated" Transparency Panel
+            </div>
+            <span id="latencyBadge" class="badge badge-latency"><i class="fa-solid fa-bolt"></i> 140ms</span>
+          </div>
+
+          <div class="transparency-content">
+            <!-- Detection Logic -->
+            <div class="trans-section">
+              <div class="trans-label"><i class="fa-solid fa-filter"></i> Status Code Detection & Matching Reasoning</div>
+              <div id="transMatchReason" class="trans-value reason-box"></div>
+            </div>
+
+            <!-- RAG Retrieved Source Chunk -->
+            <div class="trans-section">
+              <div class="trans-label"><i class="fa-solid fa-database"></i> Retrieved MDN HTTP Status Vector Store Chunk</div>
+              <div class="code-block-wrapper">
+                <pre id="transRetrievedChunk" class="code-block"></pre>
+              </div>
+            </div>
+
+            <!-- Source Attribution & Link -->
+            <div class="trans-footer">
+              <div class="attribution-info">
+                <i class="fa-brands fa-creative-commons"></i>
+                <span>Source: <strong id="transAttribution">MDN Web Docs</strong> (CC-BY-SA 2.5)</span>
+              </div>
+              <a id="mdnLink" href="#" target="_blank" class="mdn-link hidden">
+                Open Official MDN Documentation <i class="fa-solid fa-arrow-up-right-from-square"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Loading Spinner overlay -->
+      <div id="loadingOverlay" class="loading-overlay hidden">
+        <div class="spinner-box">
+          <div class="spinner"></div>
+          <p>Detecting HTTP Status Code & Retrieving Grounded MDN Context...</p>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>TCS Technology Day 2026 &bull; IT Quality Assurance Track &bull; RAG Defect Report Generator</p>
+      <p class="copyright">Content retrieved from MDN Web Docs by Mozilla contributors, licensed under CC-BY-SA 2.5.</p>
+    </footer>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

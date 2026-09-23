@@ -1,0 +1,1552 @@
+[
+  {
+    "code": 100,
+    "name": "100 Continue",
+    "category": "Informational",
+    "summary": "The HTTP 100 Continue informational response status code indicates that the initial part of a request has been received and has not yet been rejected by the server.",
+    "description": "The client should continue with a request or discard the 100 response if the request is already finished. When a request has an Expect (Expect: 100-continue) header, the 100 Continue response indicates that the server is ready or capable of receiving the request content. Waiting for a 100 Continue response can be helpful if a client anticipates that an error is likely, for example, when sending state-changing operations without previously verified authentication credentials.",
+    "causes": [
+      "Client sent Expect: 100-continue header while uploading a request body",
+      "Server configuration rejects large body uploads before reading them",
+      "Reverse proxy strips or mishandles the Expect header"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Verify the Expect: 100-continue handshake is honored for large uploads; if the server should always read bodies, disable the Expect header in the proxy.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/100",
+    "keywords": [
+      "100",
+      "continue",
+      "expect header"
+    ]
+  },
+  {
+    "code": 101,
+    "name": "101 Switching Protocols",
+    "category": "Informational",
+    "summary": "The HTTP 101 Switching Protocols informational response status code indicates the protocol that a server has switched to.",
+    "description": "The protocol is specified in the request header received from a client. The server includes an header in this response to indicate the protocol it has agreed to switch to. The process is described in detail in the Protocol upgrade mechanism guide.",
+    "causes": [
+      "WebSocket or HTTP/2 upgrade handshake being negotiated",
+      "Server configured to upgrade protocols (e.g. HTTP/1.1 to HTTP/2)",
+      "Testing tools that treat a successful upgrade as an error"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "This is a normal switching-protocols response; QA should treat it as success when protocol upgrade is expected.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/101",
+    "keywords": [
+      "101",
+      "switching protocols",
+      "websocket upgrade"
+    ]
+  },
+  {
+    "code": 102,
+    "name": "102 Processing",
+    "category": "Informational",
+    "summary": "The HTTP 102 Processing informational status code indicates to the client that the server has accepted and is processing the request, but no response is available yet. It is usually sent to prevent the client from timing out while long-running WebDAV or batch operations are processed.",
+    "description": "The HTTP 102 Processing informational status code indicates to the client that the server has accepted and is processing the request, but no response is available yet. It is usually sent to prevent the client from timing out while long-running WebDAV or batch operations are processed.",
+    "causes": [
+      "Long-running WebDAV or batch processing where server sends interim progress",
+      "Server takes longer than the client timeout to produce a final response"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Ensure long jobs stream progress and eventually return a final status; tune client timeouts for interim responses.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/102",
+    "keywords": [
+      "102",
+      "processing",
+      "webdav processing"
+    ]
+  },
+  {
+    "code": 103,
+    "name": "103 Early Hints",
+    "category": "Informational",
+    "summary": "The HTTP 103 Early Hints informational response may be sent by a server while it is still preparing a response, with hints about the sites and resources that the server expects the final response will link to.",
+    "description": "This allows a browser to preconnect to sites or start preloading resources even before the server has prepared and sent a final response. Preloaded resources indicated by early hints are fetched by the client as soon as the hints are received. The early hint response is primarily intended for use with the header, which indicates the resources to be loaded. It may also contain a Content-Security-Policy header that is enforced while processing the early hint.",
+    "causes": [
+      "Server sending early response headers to hint preload resources",
+      "CDN/proxy not handling early hints, dropping Link headers"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Confirm the Link preload hints reach the browser and that proxies forward 103 responses without erroring.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/103",
+    "keywords": [
+      "103",
+      "early hints",
+      "preload"
+    ]
+  },
+  {
+    "code": 200,
+    "name": "200 OK",
+    "category": "Successful",
+    "summary": "The HTTP 200 OK successful response status code indicates that a request has succeeded.",
+    "description": "A 200 OK response is cacheable by default. A 200 OK response has a different meaning and format depending on the HTTP request method. Here's how they vary for different methods: - : A resource was retrieved by the server and included in the response body.",
+    "causes": [
+      "Request completed successfully (baseline/happy-path)",
+      "QA regression check expecting 200 but the flow actually fails elsewhere",
+      "Caching layers serving stale success responses"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Verify response body matches expected data; if cached, check Cache-Control headers rather than assuming a live call.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/200",
+    "keywords": [
+      "200",
+      "ok",
+      "success response",
+      "loads fine"
+    ]
+  },
+  {
+    "code": 201,
+    "name": "201 Created",
+    "category": "Successful",
+    "summary": "The HTTP 201 Created successful response status code indicates that the HTTP request has led to the creation of a resource.",
+    "description": "This status code is commonly sent as the result of a request. The new resource, or a description and link to the new resource, is created before the response is returned. The newly-created items can be returned in the body of the response message, but must be locatable by the URL of the initiating request or by the URL in the value of the header provided with the response.",
+    "causes": [
+      "Resource created successfully (POST/PUT happy path)",
+      "Expecting 201 but receiving 200 because API returns no Location header",
+      "Idempotency issues on retry creating duplicate resources"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Ensure creation endpoints return 201 with a Location header; verify retries do not create duplicates.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/201",
+    "keywords": [
+      "201",
+      "created",
+      "resource created"
+    ]
+  },
+  {
+    "code": 202,
+    "name": "202 Accepted",
+    "category": "Successful",
+    "summary": "The HTTP 202 Accepted successful response status code indicates that a request has been accepted for processing, but processing has not been completed or may not have started.",
+    "description": "The actual processing of the request is not guaranteed; a task or action may fail or be disallowed when a server tries to process it. A 202 response is non-committal, meaning there is no way to later send an asynchronous HTTP response to indicate the outcome of the processing. This response code is typically used when the request is handled by another process or server, or when requests are processed in batches.",
+    "causes": [
+      "Asynchronous job accepted but not yet completed",
+      "Background task queue (workers) has not processed the request",
+      "Long-running operation returns early without confirmation"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Poll the job status endpoint until completion; log the async job ID returned in the response.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/202",
+    "keywords": [
+      "202",
+      "accepted",
+      "queued job",
+      "async request"
+    ]
+  },
+  {
+    "code": 203,
+    "name": "203 Non-Authoritative Information",
+    "category": "Successful",
+    "summary": "The HTTP 203 Non-Authoritative Information successful response status code indicates that the request was successful, but a _transforming Proxy server (proxy)_ has modified the headers or enclosed content from the origin server's (OK) response.",
+    "description": "The purpose of this status code is to allow transforming proxies to notify clients when changes have been applied to successful responses, since this may impact decisions regarding the content later. Transformations to messages can mean modifications of headers to indicate that a resource is from a mirror or a backup, but may also mean modifying content in a way that are presumed to be desirable to the client. These modifications might include malware filtering, format transcoding, privacy filtering, or other hints to the client about future requests. The 203 response is similar to the 214 Transformation Applied value of the deprecated header, which may be applicable to responses with any status code.",
+    "causes": [
+      "Proxy/CDN transforms the response (e.g. modifies headers or body)",
+      "Meta-information differs from origin server"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Compare origin vs transformed response headers when debugging content differences through CDNs.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/203",
+    "keywords": [
+      "203",
+      "non-authoritative",
+      "transformed response"
+    ]
+  },
+  {
+    "code": 204,
+    "name": "204 No Content",
+    "category": "Successful",
+    "summary": "The HTTP 204 No Content successful response status code indicates that a request has succeeded, but the client doesn't need to navigate away from its current page.",
+    "description": "A 204 response is cacheable by default, and an header is included in such cases. A 204 No Content in response to these request methods has the following meaning and results: - : The action was successful, and no further information needs to be supplied. - : The action was successful, and the value contains the entity tag for the new representation of that target resource.",
+    "causes": [
+      "Success with no body (DELETE or silent update)",
+      "Front-end expects a body but gets an empty response",
+      "Redirect target returns an empty success"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Client code should not parse a body on 204; server should confirm nothing needs returning.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/204",
+    "keywords": [
+      "204",
+      "no content",
+      "empty response"
+    ]
+  },
+  {
+    "code": 205,
+    "name": "205 Reset Content",
+    "category": "Successful",
+    "summary": "The HTTP 205 Reset Content successful response status code indicates that the request has been successfully processed and the client should reset the document view.",
+    "description": "This response is intended to support use cases where the user receives content that supports data entry, submits user-edited data in a request, and the content needs to be reset for the next entry. The instruction to \"reset content\" can mean clearing the contents of a form, resetting a canvas state, or refreshing a UI; the implementation depends on the client. > [!NOTE] > In web applications that use the 205 status, it's assumed that the client handles resetting content after a 205 response.",
+    "causes": [
+      "Form submit returns 205 telling the client to reset the document view",
+      "Browser not handling reset, leaving stale form data"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Ensure the form view resets after a 205; QA should verify the form is cleared on submit.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/205",
+    "keywords": [
+      "205",
+      "reset content",
+      "form reset"
+    ]
+  },
+  {
+    "code": 206,
+    "name": "206 Partial Content",
+    "category": "Successful",
+    "summary": "The HTTP 206 Partial Content successful response status code is sent in response to a range request.",
+    "description": "The response body contains the requested ranges of data as specified in the header of the request. The format of the response depends on the number of ranges requested. If a single range is requested, the of the entire response is set to the type of the document, and a is provided. If several ranges are requested, the is set to multipart/byteranges, and each fragment covers one range, with its own and headers describing it.",
+    "causes": [
+      "Partial content served for a Range request (video/resume downloads)",
+      "Server ignoring Range and returning full 200 instead",
+      "Incorrect Content-Range header causing download corruption"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Validate Content-Range and Content-Length on partial downloads; resume and seek must reproduce the correct byte range.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/206",
+    "keywords": [
+      "206",
+      "partial content",
+      "range request",
+      "download resume",
+      "video seek",
+      "streaming range"
+    ]
+  },
+  {
+    "code": 207,
+    "name": "207 Multi-Status",
+    "category": "Successful",
+    "summary": "The HTTP 207 Multi-Status successful response status code indicates a mixture of responses.",
+    "description": "This response is used exclusively in the context of Web Distributed Authoring and Versioning (). The response body is a text/xml or application/xml HTTP entity with a multistatus root element that lists individual response codes. > [!NOTE] > Browsers accessing web pages will never encounter this status code.",
+    "causes": [
+      "WebDAV multi-status response with per-resource results",
+      "Some sub-resources failed while others succeeded",
+      "Client parses only the first sub-status"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Parse all entries inside the multi-status body; report success/failure per sub-resource, not globally.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/207",
+    "keywords": [
+      "207",
+      "multi status",
+      "webdav multi"
+    ]
+  },
+  {
+    "code": 208,
+    "name": "208 Already Reported",
+    "category": "Successful",
+    "summary": "The HTTP 208 Already Reported successful response status code is used in a 207 (207 Multi-Status) response to save space and avoid conflicts.",
+    "description": "This response is used exclusively in the context of Web Distributed Authoring and Versioning (). If the same resource is requested several times (for example, as part of a collection) with different paths, only the first one is reported with . Responses for all other bindings will report with this 208 status code, so no conflicts are created and the response stays shorter. > [!NOTE]",
+    "causes": [
+      "WebDAV PROPFIND listing already-reported member resources",
+      "Duplicated entries from nested report"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "For 207/208 responses, deduplicate listed resources on the client side.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/208",
+    "keywords": [
+      "208",
+      "already reported",
+      "webdav report"
+    ]
+  },
+  {
+    "code": 226,
+    "name": "226 IM Used",
+    "category": "Successful",
+    "summary": "The HTTP 226 IM Used successful response status code indicates that the server is returning a in response to a request.",
+    "description": "It is used in the context of _HTTP delta encodings_. IM stands for _instance manipulation_, which refers to the algorithm generating a _delta_. In delta encoding, a client sends a request with two headers: A-IM:, which indicates a preference for a differencing algorithm, and , which specifies the version of a resource it has. The server responds with deltas relative to a given base document, rather than the document in full.",
+    "causes": [
+      "Server applied delta encoding to the response body",
+      "CDN/proxy does not support delta encoding, falling back to full content"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Confirm only the delta is returned and cache-control handles stale deltas correctly.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/226",
+    "keywords": [
+      "226",
+      "im used",
+      "delta encoding"
+    ]
+  },
+  {
+    "code": 300,
+    "name": "300 Multiple Choices",
+    "category": "Redirection",
+    "summary": "The HTTP 300 Multiple Choices redirection response status code indicates that the request has more than one possible response.",
+    "description": "The user-agent or the user should choose one of them. > [!NOTE] > In agent-driven content negotiation, a client and server collaboratively decide the best variant of a given resource when the server has multiple variants. > Most clients lack a method for automatically choosing from responses, and the additional round-trips slow down client-server interaction.",
+    "causes": [
+      "Multiple representations available (content negotiation)",
+      "Server returns a menu of choices that client did not auto-select"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Choose the correct representation manually or via Accept headers; avoid forcing users through a choice page.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/300",
+    "keywords": [
+      "300",
+      "multiple choices"
+    ]
+  },
+  {
+    "code": 301,
+    "name": "301 Moved Permanently",
+    "category": "Redirection",
+    "summary": "The HTTP 301 Moved Permanently redirection response status code indicates that the requested resource has been permanently moved to the URL in the header.",
+    "description": "A browser receiving this status will automatically request the resource at the URL in the Location header, redirecting the user to the new page. Search engines receiving this response will attribute links to the original URL to the redirected resource, passing the ranking to the new URL. > [!NOTE] > In the Fetch Standard, when a user agent receives a 301 in response to a request, it uses the method in the subsequent redirection request, as permitted by the HTTP specification.",
+    "causes": [
+      "Resource moved permanently to a new URL",
+      "Missing trailing-slash redirect or domain migration left behind",
+      "Old bookmarks hitting obsolete endpoints without a redirect"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Update internal links and add 301 redirects from old to new URLs; invalidate caches that stored the old Location.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/301",
+    "keywords": [
+      "301",
+      "moved permanently",
+      "redirect",
+      "redirect loop",
+      "url moved"
+    ]
+  },
+  {
+    "code": 302,
+    "name": "302 Found",
+    "category": "Redirection",
+    "summary": "The HTTP 302 Found redirection response status code indicates that the requested resource has been temporarily moved to the URL in the header.",
+    "description": "A browser receiving this status will automatically request the resource at the URL in the Location header, redirecting the user to the new page. Search engines receiving this response will not attribute links to the original URL to the new resource, meaning no value is transferred to the new URL. > [!NOTE] > In the Fetch Standard, when a user agent receives a 302 in response to a request, it uses the method in the subsequent redirection request, as permitted by the HTTP specification.",
+    "causes": [
+      "Temporary redirect after POST (PRG pattern)",
+      "OAuth login flows redirecting to/from identity provider",
+      "Redirect target returning an error that masks the real defect"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Follow redirects during testing and verify the final landing page; keep method semantics for PRG flows.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/302",
+    "keywords": [
+      "302",
+      "found",
+      "temporary redirect",
+      "login redirect"
+    ]
+  },
+  {
+    "code": 303,
+    "name": "303 See Other",
+    "category": "Redirection",
+    "summary": "The HTTP 303 See Other redirection response status code indicates that the browser should redirect to the URL in the header instead of rendering the requested resource.",
+    "description": "This response code is often sent back as a result of or methods so the client may retrieve a confirmation, or view a representation of a real-world object (see HTTP range-14). The method to retrieve the redirected resource is always .",
+    "causes": [
+      "POST results redirecting to a GET resource",
+      "Client not following the See Other redirect"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Confirm the client follows 303 to the location and refreshes the result view.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/303",
+    "keywords": [
+      "303",
+      "see other",
+      "post redirect get"
+    ]
+  },
+  {
+    "code": 304,
+    "name": "304 Not Modified",
+    "category": "Redirection",
+    "summary": "The HTTP 304 Not Modified redirection response status code indicates that there is no need to retransmit the requested resources.",
+    "description": "This response code is sent when the request is a conditional or request with an or an header and the condition evaluates to 'false'. It confirms that the resource cached by the client is still valid and that the server would have sent a 200 (200 OK) response with the resource if the condition evaluated to 'true'. See HTTP caching for more information. The response must not contain a body and must include the headers that would have been sent in an equivalent response, such as:",
+    "causes": [
+      "Cached copy is still valid (If-None-Match/If-Modified-Since)",
+      "ETag/Last-Modified validation mismatch causing stale caches",
+      "QA expecting fresh content but getting cached 304"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Verify cache validation headers; when content changes, ensure ETag/Last-Modified updates so caches revalidate.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/304",
+    "keywords": [
+      "304",
+      "not modified",
+      "cache hit"
+    ]
+  },
+  {
+    "code": 307,
+    "name": "307 Temporary Redirect",
+    "category": "Redirection",
+    "summary": "The HTTP 307 Temporary Redirect redirection response status code indicates that the resource requested has been temporarily moved to the URL in the header.",
+    "description": "A browser receiving this status will automatically request the resource at the URL in the Location header, redirecting the user to the new page. Search engines receiving this response will not attribute links to the original URL to the new resource, meaning no value is transferred to the new URL. The method and the body of the original request are reused to perform the redirected request. In the cases where you want the request method to be changed to , use 303 (303 See Other) instead.",
+    "causes": [
+      "Temporary redirect preserving method and body",
+      "Cross-origin redirects failing CORS/credentials",
+      "Infinite redirect chain between two endpoints"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Check redirect chains in DevTools; preserve method/body semantics and fix loops.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/307",
+    "keywords": [
+      "307",
+      "redirect",
+      "temporary redirect",
+      "method redirect"
+    ]
+  },
+  {
+    "code": 308,
+    "name": "308 Permanent Redirect",
+    "category": "Redirection",
+    "summary": "The HTTP 308 Permanent Redirect redirection response status code indicates that the requested resource has been permanently moved to the URL given by the header.",
+    "description": "A browser receiving this status will automatically request the resource at the URL in the Location header, redirecting the user to the new page. The request method and the body will not be modified by the client in the redirected request. A 301 (301 Moved Permanently) requires the request method and the body to remain unchanged when redirection is performed, but this is incorrectly handled by older clients to use the method instead. > [!NOTE]",
+    "causes": [
+      "Permanent redirect preserving method and body (PUT/POST)",
+      "API clients caching the new URL permanently even after revert"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Update clients to the permanent URL; avoid 308 during transient maintenance windows.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/308",
+    "keywords": [
+      "308",
+      "permanent redirect",
+      "redirect"
+    ]
+  },
+  {
+    "code": 400,
+    "name": "400 Bad Request",
+    "category": "Client Error",
+    "summary": "The hyper text transfer protocol (HTTP) 400 Bad Request response status code indicates that the server cannot or will not process the request due to something that is perceived to be a client error (e.g., malformed request syntax, invalid request message framing, or deceptive request routing).",
+    "description": "The client should not repeat the request without modifications. A 400 error occurs when the payload sent to the API endpoint or web server fails validation, contains invalid JSON/XML parameters, missing mandatory headers, or invalid URL query parameters.",
+    "causes": [
+      "Malformed JSON payload or invalid request syntax",
+      "Missing mandatory input fields or path variables",
+      "Invalid parameter types (e.g. string passed instead of integer)",
+      "URL query parameter encoding failure or illegal characters",
+      "Request payload exceeds server schema validation rules"
+    ],
+    "recommended_steps": [
+      "Navigate to the affected page or API endpoint",
+      "Submit the form/request with invalid or missing required payload parameters",
+      "Observe HTTP 400 Bad Request response in DevTools Network tab"
+    ],
+    "remediation": "Validate input schema on the client side before sending, correct request payload formatting, and ensure mandatory query/body parameters match API specs.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400",
+    "keywords": [
+      "bad request",
+      "invalid payload",
+      "malformed",
+      "syntax error",
+      "missing field",
+      "invalid parameter",
+      "400",
+      "validation failed"
+    ]
+  },
+  {
+    "code": 401,
+    "name": "401 Unauthorized",
+    "category": "Client Error",
+    "summary": "The HTTP 401 Unauthorized client error response code indicates that the request has not been applied because it lacks valid authentication credentials for the target resource.",
+    "description": "This status is sent with a WWW-Authenticate header that contains information on how the user can request authorization correctly. Unlike 403 Forbidden, 401 means the client is unauthenticated or credentials provided (Bearer Token, Session Cookie, Basic Auth) are invalid or expired.",
+    "causes": [
+      "User session cookie or JWT token has expired or is invalid",
+      "Authorization header is missing or improperly formatted (e.g. missing 'Bearer ' prefix)",
+      "Incorrect username or password submitted on login API",
+      "SSO/OAuth token refresh failure"
+    ],
+    "recommended_steps": [
+      "Open application in web browser or API client",
+      "Attempt to log in with invalid credentials or access a protected route without authenticating",
+      "Inspect DevTools Network tab to verify 401 Unauthorized response code"
+    ],
+    "remediation": "Implement automatic token renewal/refresh flows, clear expired session cookies, prompt user to re-authenticate, and ensure proper Authorization header format.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401",
+    "keywords": [
+      "login",
+      "login problem",
+      "unauthorized",
+      "auth",
+      "authentication",
+      "credentials",
+      "jwt",
+      "token expired",
+      "invalid login",
+      "sign in error",
+      "401"
+    ]
+  },
+  {
+    "code": 402,
+    "name": "402 Payment Required",
+    "category": "Client Error",
+    "summary": "The HTTP 402 Payment Required client error response status code is a nonstandard response status code reserved for future use.",
+    "description": "This status code was created to enable digital cash or (micro) payment systems and would indicate that requested content is not available until the client makes a payment. No standard use convention exists and different systems use it in different contexts.",
+    "causes": [
+      "Payment required feature not yet implemented",
+      "Billing/payment gateway returning placeholder 402",
+      "Paywall blocks access without subscription"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Implement or clearly surface payment-gated behavior; check the gateway integration for billing defects.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/402",
+    "keywords": [
+      "402",
+      "payment required",
+      "paywall"
+    ]
+  },
+  {
+    "code": 403,
+    "name": "403 Forbidden",
+    "category": "Client Error",
+    "summary": "The HTTP 403 Forbidden client error response code indicates that the server understands the request but refuses to authorize it.",
+    "description": "Unlike 401 Unauthorized, the client's identity is known to the server, but the user does not possess the necessary roles, permissions, or access control privileges to view the requested resource.",
+    "causes": [
+      "Authenticated user attempting to access admin-only endpoint without required RBAC permission",
+      "IP address or domain blacklisted by Web Application Firewall (WAF) or CORS policy",
+      "CSRF token missing or invalid on POST/PUT request",
+      "Accessing restricted file system or directory index"
+    ],
+    "recommended_steps": [
+      "Log in as a standard user account",
+      "Navigate to an administrative or restricted permission resource",
+      "Verify server responds with 403 Forbidden status and access denied message"
+    ],
+    "remediation": "Audit Role-Based Access Control (RBAC) configurations, ensure CSRF token validation logic is correct, and display clear permission error UI to users.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403",
+    "keywords": [
+      "forbidden",
+      "access denied",
+      "permission denied",
+      "restricted",
+      "no permission",
+      "privilege error",
+      "waf block",
+      "csrf failed",
+      "403"
+    ]
+  },
+  {
+    "code": 404,
+    "name": "404 Not Found",
+    "category": "Client Error",
+    "summary": "The HTTP 404 Not Found client error response code indicates that the server cannot find the requested resource.",
+    "description": "Links that lead to a 404 page are often called broken or dead links and can be subject to link rot. A 404 status code does not indicate whether the resource is temporarily or permanently missing.",
+    "causes": [
+      "User clicked a broken or misspelled URL link",
+      "Resource (e.g. user ID, product, file) was deleted from database or backend",
+      "Frontend route misconfiguration or missing single-page application fallback",
+      "API endpoint path typo or missing URL prefix"
+    ],
+    "recommended_steps": [
+      "Navigate to the specified page URL or request non-existent resource ID",
+      "Observe page displaying 404 error page or Network tab showing HTTP 404 response"
+    ],
+    "remediation": "Fix broken URL routing, implement fallback 404 user interface, and ensure backend API routes match frontend endpoint paths.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404",
+    "keywords": [
+      "404",
+      "not found",
+      "page not found",
+      "broken link",
+      "missing page",
+      "404 error",
+      "resource missing",
+      "dead link",
+      "page loading failed"
+    ]
+  },
+  {
+    "code": 405,
+    "name": "405 Method Not Allowed",
+    "category": "Client Error",
+    "summary": "The HTTP 405 Method Not Allowed client error response status code indicates that the server knows the request method, but the target resource doesn't support this method.",
+    "description": "The server must generate an header in a 405 response with a list of methods that the target resource currently supports. Improper server-side permissions set on files or directories may cause a 405 response when the request would otherwise be expected to succeed.",
+    "causes": [
+      "Wrong HTTP method used against endpoint (e.g. GET vs POST)",
+      "Method not routed on the server (missing @app.route for POST)",
+      "Form/JavaScript calling the wrong verb"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Match front-end calls to the allowed methods; verify each endpoint's allowed methods in the Allow header.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/405",
+    "keywords": [
+      "405",
+      "method not allowed",
+      "get not allowed",
+      "post not allowed",
+      "delete not allowed",
+      "wrong http method"
+    ]
+  },
+  {
+    "code": 406,
+    "name": "406 Not Acceptable",
+    "category": "Client Error",
+    "summary": "The HTTP 406 Not Acceptable client error response status code indicates that the server could not produce a response matching the list of acceptable values defined in the request's proactive content negotiation headers and that the server was unwilling to supply a default representation.",
+    "description": "Proactive content negotiation headers include: - - -",
+    "causes": [
+      "Accept header requests a representation the server cannot produce",
+      "Wrong Accept header (e.g. application/xml requested, JSON only available)",
+      "Content negotiation misconfiguration"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Align Accept headers with available media types or support the requested format.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/406",
+    "keywords": [
+      "406",
+      "not acceptable",
+      "content negotiation",
+      "accept header"
+    ]
+  },
+  {
+    "code": 407,
+    "name": "407 Proxy Authentication Required",
+    "category": "Client Error",
+    "summary": "The HTTP 407 Proxy Authentication Required client error response status code indicates that the request did not succeed because it lacks valid authentication credentials for the that sits between the client and the server with access to the requested resource.",
+    "description": "This response is sent with a header that contains information on how to correctly authenticate requests. The client may repeat the request with a new or replaced header field.",
+    "causes": [
+      "Proxy requires authentication and client did not provide proxy credentials",
+      "Corporate proxy blocking automated tests",
+      "Stale proxy credentials"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Provide correct proxy credentials/configuration in the test environment and header setup.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/407",
+    "keywords": [
+      "407",
+      "proxy authentication",
+      "proxy auth",
+      "proxy credentials"
+    ]
+  },
+  {
+    "code": 408,
+    "name": "408 Request Timeout",
+    "category": "Client Error",
+    "summary": "The HTTP 408 Request Timeout response status code means that the server would like to shut down this unused connection.",
+    "description": "Sent on an idle connection by some servers, even without any previous request by the client. It means the server decided to close the connection rather than continue waiting for request completion.",
+    "causes": [
+      "Client upload/request took too long to stream over slow network connection",
+      "Client browser stalled before completing HTTP header transmission",
+      "Server request idle timeout threshold exceeded"
+    ],
+    "recommended_steps": [
+      "Initiate request with large payload or simulated high-latency connection",
+      "Allow connection to remain idle past timeout threshold",
+      "Observe 408 Request Timeout response"
+    ],
+    "remediation": "Optimize client upload speeds, tune server HTTP keep-alive and request timeout parameters, and implement client retry logic.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/408",
+    "keywords": [
+      "request timeout",
+      "408",
+      "connection timeout",
+      "slow network",
+      "idle timeout",
+      "request stalled"
+    ]
+  },
+  {
+    "code": 409,
+    "name": "409 Conflict",
+    "category": "Client Error",
+    "summary": "The HTTP 409 Conflict response status code indicates a request conflict with the current state of the target resource.",
+    "description": "Conflicts are most likely to occur in response to a PUT request or duplicate submission. For example, you may get a 409 response when uploading a file which is older than the one already on the server, or registering an email already in use.",
+    "causes": [
+      "Attempting to register a username, email, or unique ID that already exists in database",
+      "Optimistic locking concurrency failure (two users modifying same entity simultaneously)",
+      "Version control or file upload state conflict"
+    ],
+    "recommended_steps": [
+      "Submit creation form with duplicate unique key (e.g. existing email address)",
+      "Observe API returning HTTP 409 Conflict with duplicate entity message"
+    ],
+    "remediation": "Provide user-friendly validation message explaining duplicate data, handle concurrent state updates gracefully, and allow conflict resolution.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/409",
+    "keywords": [
+      "conflict",
+      "409",
+      "duplicate entry",
+      "already exists",
+      "concurrency error",
+      "version mismatch",
+      "unique constraint"
+    ]
+  },
+  {
+    "code": 410,
+    "name": "410 Gone",
+    "category": "Client Error",
+    "summary": "The HTTP 410 Gone client error response status code indicates that the target resource is no longer available at the origin server and that this condition is likely to be permanent.",
+    "description": "A 410 response is cacheable by default. Clients should not repeat requests for resources that return a 410 response, and website owners should remove or replace links that return this code. If server owners don't know whether this condition is temporary or permanent, a status code should be used instead.",
+    "causes": [
+      "Resource intentionally deleted with no redirect",
+      "API version removed an endpoint that clients still call",
+      "Deprecated content link never updated"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Return 410 loudly and update or remove stale references/links pointing to deleted resources.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/410",
+    "keywords": [
+      "410",
+      "gone",
+      "removed resource",
+      "deleted resource"
+    ]
+  },
+  {
+    "code": 411,
+    "name": "411 Length Required",
+    "category": "Client Error",
+    "summary": "The HTTP 411 Length Required client error response status code indicates that the server refused to accept the request without a defined header.",
+    "description": "> [!NOTE] > When sending data in a series of chunks, the Content-Length header is omitted, and at the beginning of each chunk, the length of the current chunk needs to be included in hexadecimal format. > See for more details.",
+    "causes": [
+      "Missing or invalid Content-Length header",
+      "Server requires Content-Length but request is chunked",
+      "Proxy stripping Content-Length"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Ensure the client sends a correct Content-Length or switch to chunked encoding consistently.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/411",
+    "keywords": [
+      "411",
+      "length required",
+      "content-length missing"
+    ]
+  },
+  {
+    "code": 412,
+    "name": "412 Precondition Failed",
+    "category": "Client Error",
+    "summary": "The HTTP 412 Precondition Failed client error response status code indicates that access to the target resource was denied.",
+    "description": "This happens with conditional requests on methods other than or when the condition defined by the or headers is not fulfilled. In that case, the request (usually an upload or a modification of a resource) cannot be made and this error response is sent back.",
+    "causes": [
+      "If-Match/If-None-Match precondition failed due to ETag mismatch",
+      "Optimistic locking conflict on stale client data",
+      "Conditional header from retry logic not matching"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Refresh the resource state in the client before retrying; validate ETag handling server-side.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/412",
+    "keywords": [
+      "412",
+      "precondition failed",
+      "etag mismatch",
+      "if-match failed",
+      "optimistic locking"
+    ]
+  },
+  {
+    "code": 413,
+    "name": "413 Content Too Large",
+    "category": "Client Error",
+    "summary": "The HTTP 413 Content Too Large client error response status code indicates that the request entity was larger than limits defined by server.",
+    "description": "The server might close the connection or return a header field. Prior to the response phrase for the status was Payload Too Large. This message is still widely used.",
+    "causes": [
+      "Uploaded file/request body exceeds server limit",
+      "Base64 or multipart encoding inflating payload size",
+      "Misconfigured proxy body-size limit"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Raise or align body size limits across app/proxy/load balancer; add client-side file-size validation and clear error messaging.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/413",
+    "keywords": [
+      "413",
+      "payload too large",
+      "request too large",
+      "file too large",
+      "upload too big",
+      "413 too large",
+      "upload",
+      "upload failed",
+      "file size",
+      "size limit",
+      "too big",
+      "large upload"
+    ]
+  },
+  {
+    "code": 414,
+    "name": "414 URI Too Long",
+    "category": "Client Error",
+    "summary": "The HTTP 414 URI Too Long client error response status code indicates that a URI requested by the client was longer than the server is willing to interpret.",
+    "description": "There are a few rare conditions when this error might occur: - a client has improperly converted a request to a request with long query information, - a client has descended into a loop of redirection (for example, a redirected URI prefix that points to a suffix of itself), or - the server is under attack by a client attempting to exploit potential security holes.",
+    "causes": [
+      "Huge query string or URL exceeding server limit",
+      "Application appending nonce/trace data to URLs",
+      "Proxy limits on request line length"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Move large inputs into POST bodies; truncate/search long URLs or raise server URI limits.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/414",
+    "keywords": [
+      "414",
+      "uri too long",
+      "url too long"
+    ]
+  },
+  {
+    "code": 415,
+    "name": "415 Unsupported Media Type",
+    "category": "Client Error",
+    "summary": "The HTTP 415 Unsupported Media Type client error response status code indicates that the server refused to accept the request because the message HTTP Content (content) format is not supported.",
+    "description": "The format problem might be due to the request's indicated or , or as a result of processing the request message content. Some servers may be strict about the expected Content-Type of requests. For example, sending UTF8 instead of UTF-8 to specify the charset may cause the server to consider the media type invalid.",
+    "causes": [
+      "Wrong Content-Type header (e.g. text/plain instead of application/json)",
+      "Uploading unsupported file type/extension",
+      "Server only accepts certain media types"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Set the correct Content-Type on requests and match server-supported formats; validate upload MIME types client-side.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/415",
+    "keywords": [
+      "415",
+      "unsupported media type",
+      "wrong content type",
+      "invalid file format",
+      "content type mismatch"
+    ]
+  },
+  {
+    "code": 416,
+    "name": "416 Range Not Satisfiable",
+    "category": "Client Error",
+    "summary": "The HTTP 416 Range Not Satisfiable client error response status code indicates that a server could not serve the requested ranges.",
+    "description": "The most likely reason for this response is that the document doesn't contain such ranges, or that the header value, though syntactically correct, doesn't make sense. The 416 response message should contain a indicating an unsatisfied range (that is a '*') followed by a '/' and the current length of the resource, e.g., Content-Range: bytes */12777 When encountering this error, browsers typically either abort the operation (for example, a download will be considered non-resumable) or request the whole document again without ranges.",
+    "causes": [
+      "Range request asks for a range outside the resource size",
+      "Wrong Content-Range math in video/resume features",
+      "Server returns full 200 instead of 416 for bad ranges"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Validate the requested byte range and reply with Content-Range; fix client range calculation.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/416",
+    "keywords": [
+      "416",
+      "range not satisfiable",
+      "invalid range",
+      "bad range request"
+    ]
+  },
+  {
+    "code": 417,
+    "name": "417 Expectation Failed",
+    "category": "Client Error",
+    "summary": "The HTTP 417 Expectation Failed client error response status code indicates that the expectation given in the request's header could not be met.",
+    "description": "After receiving a 417 response, a client should repeat the request without an Expect request header, including the file in the request body without waiting for a response. See the header documentation for more details.",
+    "causes": [
+      "Expect: 100-continue expectation cannot be filled by server",
+      "Proxies mishandling the Expect header"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Update or remove the Expect header if the server can't meet it; fix proxy header forwarding.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/417",
+    "keywords": [
+      "417",
+      "expectation failed",
+      "expect header failed"
+    ]
+  },
+  {
+    "code": 418,
+    "name": "418 I'm a teapot",
+    "category": "Client Error",
+    "summary": "The HTTP 418 I'm a teapot status response code indicates that the server refuses to brew coffee because it is, permanently, a teapot.",
+    "description": "A combined coffee/tea pot that is temporarily out of coffee should instead return . This error is a reference to Hyper Text Coffee Pot Control Protocol defined in April Fools' jokes in 1998 and 2014. While originally defined in RFC 2324 as an April Fools' joke, this status code was formally reserved in RFC 9110 due to its wide deployment as a joke, so it cannot be assigned any non-joke semantics for the foreseeable future. Some websites use this response for requests they do not wish to handle, such as automated queries.",
+    "causes": [
+      "Aprils-fool easter-egg endpoint intentionally returns 418",
+      "Client handling of non-standard status codes as errors"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Do not rely on 418 in production contracts; treat as a non-standard informational response.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/418",
+    "keywords": [
+      "418",
+      "teapot",
+      "im a teapot"
+    ]
+  },
+  {
+    "code": 421,
+    "name": "421 Misdirected Request",
+    "category": "Client Error",
+    "summary": "The HTTP 421 Misdirected Request client error response status code indicates that the request was directed to a server that is not able to produce a response.",
+    "description": "This can be sent by a server that is not configured to produce responses for the combination of scheme and authority that are included in the request URI. Clients may retry the request over a different connection.",
+    "causes": [
+      "Request sent to server that cannot produce a response for the target (HTTP/2)",
+      "Sticky-session load balancer routing a request to the wrong backend",
+      "Virtual host not configured on that node"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Ensure connection pooling and routing send requests to nodes able to answer the Host/authority.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/421",
+    "keywords": [
+      "421",
+      "misdirected request",
+      "wrong backend",
+      "connection reuse"
+    ]
+  },
+  {
+    "code": 422,
+    "name": "422 Unprocessable Content",
+    "category": "Client Error",
+    "summary": "The HTTP 422 Unprocessable Content client error response status code indicates that the server understood the content type of the request content, and the syntax of the request content was correct, but it was unable to process the contained instructions.",
+    "description": "Clients that receive a 422 response should expect that repeating the request without modification will fail with the same error.",
+    "causes": [
+      "Request is well-formed but semantically invalid (business rule violation)",
+      "Duplicate unique fields, invalid enum values, or inconsistent data",
+      "Validation errors beyond format, e.g. logic/state violations"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Return detailed field-level errors; align front-end validation with backend business rules.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/422",
+    "keywords": [
+      "422",
+      "unprocessable",
+      "unprocessable entity",
+      "semantic error",
+      "business validation",
+      "422 validation"
+    ]
+  },
+  {
+    "code": 423,
+    "name": "423 Locked",
+    "category": "Client Error",
+    "summary": "The HTTP 423 Locked client error response status code indicates that a resource is _locked_, meaning it can't be accessed.",
+    "description": "Its response body should contain information in 's XML format. > [!NOTE] > The ability to _lock_ a resource to prevent conflicts is specific to some servers. > Browsers accessing web pages will never encounter this status code; in the erroneous cases it happens, they will handle it as a generic status code.",
+    "causes": [
+      "Resource locked (WebDAV or application-level lock)",
+      "Concurrent edit/save blocked by another session"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Surface the lock owner and allow force-unlock where appropriate; release locks on session end.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/423",
+    "keywords": [
+      "423",
+      "locked",
+      "resource locked",
+      "file locked"
+    ]
+  },
+  {
+    "code": 424,
+    "name": "424 Failed Dependency",
+    "category": "Client Error",
+    "summary": "The HTTP 424 Failed Dependency client error response status code indicates that the method could not be performed on the resource because the requested action depended on another action, and that action failed.",
+    "description": "Regular web servers typically do not return this status code, but some protocols like can return it. For example, in , if a PROPPATCH request was issued, and one command fails then automatically every other command will also fail with 424 Failed Dependency.",
+    "causes": [
+      "Dependent request failed before this one could proceed",
+      "Previous step in a workflow/transaction failed",
+      "WebDAV dependency chain broken"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Check and fix the upstream dependency before retrying; return clear context about which dependency failed.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/424",
+    "keywords": [
+      "424",
+      "failed dependency",
+      "dependency failed"
+    ]
+  },
+  {
+    "code": 425,
+    "name": "425 Too Early",
+    "category": "Client Error",
+    "summary": "The HTTP 425 Too Early client error response status code indicates that the server was unwilling to risk processing a request that might be replayed to avoid potential replay attacks.",
+    "description": "If a client has interacted with a server recently, early data (also known as zero round-trip time (0-RTT) data) allows the client to send data to a server in the first round trip of a connection, without waiting for the TLS handshake to complete. A client that sends a request in early data does not need to include the Early-Data header. See for more information.",
+    "causes": [
+      "Client replayed a request too early before the server is ready",
+      "HTTP/2 replay protection trigger"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Add replay protection/idempotency keys; retry the request after the server signals readiness.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/425",
+    "keywords": [
+      "425",
+      "too early",
+      "replay protection"
+    ]
+  },
+  {
+    "code": 426,
+    "name": "426 Upgrade Required",
+    "category": "Client Error",
+    "summary": "The HTTP 426 Upgrade Required client error response status code indicates that the server refused to perform the request using the current protocol but might be willing to do so after the client upgrades to a different protocol.",
+    "description": "The server sends an header with this response to indicate the required protocol(s).",
+    "causes": [
+      "Server requires an upgraded protocol (e.g. HTTP/2, WebSocket)",
+      "Client using old protocol version that server no longer accepts"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Negotiate the required protocol upgrade before sending the actual request.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/426",
+    "keywords": [
+      "426",
+      "upgrade required",
+      "protocol upgrade",
+      "http2 required"
+    ]
+  },
+  {
+    "code": 428,
+    "name": "428 Precondition Required",
+    "category": "Client Error",
+    "summary": "The HTTP 428 Precondition Required client error response status code indicates that the server requires the request to be conditional.",
+    "description": "Typically, a 428 response means that a required precondition header such as is missing. When a precondition header does not match the server-side state, the response should be 412 (412 Precondition Failed).",
+    "causes": [
+      "Missing conditional request header (If-Match/If-Unmodified-Since)",
+      "Optimistic locking requires preconditions not sent by client"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Send the required precondition headers in client requests to protect against races.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/428",
+    "keywords": [
+      "428",
+      "precondition required",
+      "conditional header missing"
+    ]
+  },
+  {
+    "code": 429,
+    "name": "429 Too Many Requests",
+    "category": "Client Error",
+    "summary": "The HTTP 429 Too Many Requests response status code indicates the user has sent too many requests in a given amount of time ('rate limiting').",
+    "description": "A Retry-After header might be included with this response indicating how long to wait before making a new request.",
+    "causes": [
+      "Client app sending excessive rapid API calls without debouncing or throttling",
+      "Automated test runner or scraper exceeding API rate limit thresholds",
+      "DDoS protection or WAF rate limiting triggered"
+    ],
+    "recommended_steps": [
+      "Send high volume of HTTP requests to the target API endpoint within short window",
+      "Observe 429 status code returned with Retry-After header"
+    ],
+    "remediation": "Implement exponential backoff retry policy, add request debouncing on client side, and respect Retry-After response headers.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429",
+    "keywords": [
+      "rate limit",
+      "too many requests",
+      "429",
+      "throttled",
+      "rate limited",
+      "quota exceeded",
+      "api limit"
+    ]
+  },
+  {
+    "code": 431,
+    "name": "431 Request Header Fields Too Large",
+    "category": "Client Error",
+    "summary": "The HTTP 431 Request Header Fields Too Large client error response status code indicates that the server refuses to process the request because the request's HTTP headers are too long.",
+    "description": "The request may be resubmitted after reducing the size of the request headers. 431 can be used when the total size of request headers is too large or when a single header field is too large. To help clients running into this error, indicate which of the two is the problem in the response body and, ideally, say which headers are too large. This lets people attempt to fix the problem, such as by clearing cookies.",
+    "causes": [
+      "Request header fields exceed server limits",
+      "Too many/sizeable cookies or custom headers (token bloat)",
+      "Proxy stripping and re-adding oversized headers"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Trim cookie/header size, encrypt data server-side instead of embedding in headers, and raise header limits consistently.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/431",
+    "keywords": [
+      "431",
+      "header too large",
+      "request header too long",
+      "cookie too large",
+      "headers too big"
+    ]
+  },
+  {
+    "code": 451,
+    "name": "451 Unavailable For Legal Reasons",
+    "category": "Client Error",
+    "summary": "The HTTP 451 Unavailable For Legal Reasons client error response status code indicates that the user requested a resource that is not available due to legal reasons, such as a web page for which a legal action has been issued.",
+    "description": "The HTTP 451 Unavailable For Legal Reasons client error response status code indicates that the user requested a resource that is not available due to legal reasons, such as a web page for which a legal action has been issued.",
+    "causes": [
+      "Content blocked for legal/censorship reasons",
+      "Geo-blocking or regulatory filtering middleware",
+      "Country-specific content unavailability"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Communicate the legal block clearly in the UI and return the correct status to consumers.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/451",
+    "keywords": [
+      "451",
+      "unavailable for legal reasons",
+      "legal block",
+      "content blocked"
+    ]
+  },
+  {
+    "code": 500,
+    "name": "500 Internal Server Error",
+    "category": "Server Error",
+    "summary": "The HTTP 500 Internal Server Error server error response code indicates that the server encountered an unexpected condition that prevented it from fulfilling the request.",
+    "description": "This error response is a generic 'catch-all' response. Usually, this indicates the server cannot find a more specific 5xx error code to return. Unhandled exceptions, NullPointerExceptions, database crash, or severe code syntax bugs trigger 500 errors.",
+    "causes": [
+      "Unhandled server-side exception or crash (e.g. NullReferenceException, TypeError)",
+      "Database connection failure or broken SQL query execution",
+      "Missing server environment configuration variable or secret key",
+      "Dependency failure in internal microservice"
+    ],
+    "recommended_steps": [
+      "Perform action on website (e.g. submit checkout or search form)",
+      "Server encounters unhandled internal exception",
+      "Observe 500 Internal Server Error displayed on UI or returned in DevTools"
+    ],
+    "remediation": "Inspect backend application log stack trace, fix unhandled code exceptions, verify database connectivity, and implement global error handler.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500",
+    "keywords": [
+      "500",
+      "internal server error",
+      "server error",
+      "getting 500 error",
+      "server crashed",
+      "unhandled exception",
+      "stack trace",
+      "null pointer",
+      "500 error",
+      "checkout error",
+      "submit error"
+    ]
+  },
+  {
+    "code": 501,
+    "name": "501 Not Implemented",
+    "category": "Server Error",
+    "summary": "The HTTP 501 Not Implemented server error response status code means that the server does not support the functionality required to fulfill the request.",
+    "description": "A response with this status may also include a header, telling the client that they can retry the request after the specified time has elapsed. A 501 response is cacheable by default unless caching headers instruct otherwise. 501 is the appropriate response when the server does not recognize the request method and is incapable of supporting it for any resource. Servers are required to support and , and therefore must not return 501 in response to requests with these methods.",
+    "causes": [
+      "Server does not implement the requested method/feature",
+      "API endpoint registered but not yet implemented",
+      "Missing server-side handler for a new HTTP method"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Implement the handler or remove the capability that exposes an unimplemented endpoint.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/501",
+    "keywords": [
+      "501",
+      "not implemented",
+      "unsupported method"
+    ]
+  },
+  {
+    "code": 502,
+    "name": "502 Bad Gateway",
+    "category": "Server Error",
+    "summary": "The HTTP 502 Bad Gateway server error response code indicates that the server, while acting as a gateway or proxy, received an invalid response from the inbound server.",
+    "description": "502 errors are usually caused by issues between back-end web servers (e.g. Nginx, Cloudflare) and upstream application servers (e.g. Node.js, Gunicorn, PHP-FPM).",
+    "causes": [
+      "Upstream application process (Node, Python, Java) crashed or is not running",
+      "Reverse proxy (Nginx/HAProxy) failed to communicate with backend service port",
+      "Firewall or network routing failure between proxy and backend container",
+      "Malformed HTTP response header sent by upstream server"
+    ],
+    "recommended_steps": [
+      "Send request to reverse proxy endpoint when upstream service process is down",
+      "Observe Nginx/Cloudflare returning 502 Bad Gateway page"
+    ],
+    "remediation": "Check upstream application server process status, restart crashed microservices, and inspect reverse proxy error logs.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502",
+    "keywords": [
+      "502",
+      "bad gateway",
+      "proxy error",
+      "upstream error",
+      "nginx 502",
+      "backend down",
+      "service crash"
+    ]
+  },
+  {
+    "code": 503,
+    "name": "503 Service Unavailable",
+    "category": "Server Error",
+    "summary": "The HTTP 503 Service Unavailable server error response code indicates that the server is not ready to handle the request.",
+    "description": "Common causes are a server that is down for maintenance or that is overloaded. This response should be used for temporary conditions and the Retry-After header should contain the estimated time for recovery.",
+    "causes": [
+      "Server is undergoing scheduled maintenance",
+      "Server CPU/RAM utilization reached 100% capacity and is rejecting new requests",
+      "Database connection pool exhausted"
+    ],
+    "recommended_steps": [
+      "Access web service during scheduled maintenance window or under peak load",
+      "Observe 503 Service Unavailable maintenance page"
+    ],
+    "remediation": "Scale backend server instances, implement autoscaling rules, return Retry-After header, and optimize database connection pooling.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503",
+    "keywords": [
+      "503",
+      "service unavailable",
+      "maintenance",
+      "server overloaded",
+      "down for maintenance",
+      "capacity exceeded",
+      "service down"
+    ]
+  },
+  {
+    "code": 504,
+    "name": "504 Gateway Timeout",
+    "category": "Server Error",
+    "summary": "The HTTP 504 Gateway Timeout server error response code indicates that the server, while acting as a gateway or proxy, did not get a response in time from the upstream server.",
+    "description": "504 errors happen when an upstream database query or microservice computation takes longer than the proxy gateway's configured timeout limit.",
+    "causes": [
+      "Slow database query blocking upstream API response past proxy timeout (e.g. 30s)",
+      "Third-party external API integration hanging or unresponsive",
+      "Network latency / packet loss between proxy and application server"
+    ],
+    "recommended_steps": [
+      "Execute complex search/report query requiring long computation",
+      "Proxy gateway terminates connection after timeout period, returning 504 Gateway Timeout"
+    ],
+    "remediation": "Optimize slow database queries, implement asynchronous background processing (Celery/queues), and adjust gateway proxy timeout limits.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/504",
+    "keywords": [
+      "504",
+      "gateway timeout",
+      "timeout",
+      "takes too long",
+      "hanging",
+      "page not loading",
+      "connection timed out",
+      "request timed out",
+      "loading timeout",
+      "loads forever",
+      "stuck loading",
+      "spinner",
+      "loading spinner",
+      "infinite loading"
+    ]
+  },
+  {
+    "code": 505,
+    "name": "505 HTTP Version Not Supported",
+    "category": "Server Error",
+    "summary": "The HTTP 505 HTTP Version Not Supported server error response status code indicates that the HTTP version used in the request is not supported by the server.",
+    "description": "It's common to see this error when a request line is improperly formed such as GET /path to resource HTTP/1.1 or with \\n terminating the request line instead of \\r\\n. For example, intermediaries such as load balancers may not handle request lines of a forwarded request as illustrated in the example below.",
+    "causes": [
+      "Client speaks an unsupported HTTP version (e.g. HTTP/0.9, HTTP/1.0 vs HTTP/2)",
+      "Protocol negotiation mismatch behind proxies"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Align client and server HTTP versions; upgrade the client library or configure protocol downgrade rules.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/505",
+    "keywords": [
+      "505",
+      "http version not supported",
+      "version not supported"
+    ]
+  },
+  {
+    "code": 506,
+    "name": "506 Variant Also Negotiates",
+    "category": "Server Error",
+    "summary": "The HTTP 506 Variant Also Negotiates server error response status code is returned during content negotiation when there is recursive loop in the process of selecting a resource.",
+    "description": "Agent-driven content negotiation enables a client and server to collaboratively decide the best variant of a given resource when the server has multiple variants. A server sends a 506 status code due to server misconfiguration that results in circular references when creating responses. Lack of standardization of how clients automatically choose from responses, and the additional round-trips that slow down client-server interaction mean this mechanism is rarely used. Server-driven content negotiation is far more common, where a server directly chooses the most appropriate resource for the client based on the request headers (, , etc.).",
+    "causes": [
+      "Server configuration causes content negotiation to reference itself",
+      "Conflicting variants configured for the same resource"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Review server content-negotiation configuration and remove circular variant references.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/506",
+    "keywords": [
+      "506",
+      "variant also negotiates",
+      "negotiation loop"
+    ]
+  },
+  {
+    "code": 507,
+    "name": "507 Insufficient Storage",
+    "category": "Server Error",
+    "summary": "The HTTP 507 Insufficient Storage server error response status code indicates that an action could not be performed because the server does not have enough available storage to successfully complete the request.",
+    "description": "This status code was first used in the context of Web Distributed Authoring and Versioning (), but has propagated into other use cases to describe situations where server resources are exhausted. Common causes of this error can be from server directories running out of available space, not enough available RAM for an operation, or internal limits reached (such as application-specific memory limits, for example). The request causing this error does not necessarily need to include content, as it may be a request that would create a resource on the server if it was successful. This issue is considered temporary, as opposed to a 413 (413 Content Too Large), which indicates that the client request is too large for the server to process regardless of server resource constraints.",
+    "causes": [
+      "Server/backing store out of disk or in-memory capacity",
+      "Uploads or file operations fail when storage is full",
+      "WebDAV storage quota exceeded"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Free storage or scale the storage backend; add capacity alerting and graceful user feedback.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/507",
+    "keywords": [
+      "507",
+      "insufficient storage",
+      "disk full",
+      "storage full",
+      "out of space"
+    ]
+  },
+  {
+    "code": 508,
+    "name": "508 Loop Detected",
+    "category": "Server Error",
+    "summary": "The HTTP 508 Loop Detected server error response status code indicates that the entire operation failed because it encountered an infinite loop while processing a request with Depth: infinity.",
+    "description": "The status may be given in the context of the Web Distributed Authoring and Versioning (). It was introduced as a fallback for cases where WebDAV clients do not support 208 (208 Already Reported) responses (when requests do not explicitly include a DAV header).",
+    "causes": [
+      "Infinite redirect loop detected (A -> B -> A)",
+      "Recursive include/template rendering detected by server",
+      "Misconfigured rewrite rules causing a loop"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Remove the circular reference; trace the redirect chain via DevTools and fix the looping rewrite/directive.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/508",
+    "keywords": [
+      "508",
+      "loop detected",
+      "infinite loop",
+      "redirect loop"
+    ]
+  },
+  {
+    "code": 510,
+    "name": "510 Not Extended",
+    "category": "Server Error",
+    "summary": "The HTTP 510 Not Extended server error response status code is sent when the client request declares an HTTP Extension () that should be used to process the request, but the extension is not supported.",
+    "description": "The HTTP 510 Not Extended server error response status code is sent when the client request declares an HTTP Extension () that should be used to process the request, but the extension is not supported.",
+    "causes": [
+      "Client did not declare the extensions the server requires",
+      "Server policy needs mandatory extension negotiation"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Declare the required HTTP extensions or adjust server settings requiring them.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/510",
+    "keywords": [
+      "510",
+      "not extended"
+    ]
+  },
+  {
+    "code": 511,
+    "name": "511 Network Authentication Required",
+    "category": "Server Error",
+    "summary": "The HTTP 511 Network Authentication Required server error response status code indicates that the client needs to authenticate to gain network access.",
+    "description": "This status is not generated by origin servers, but by intercepting Proxy_server (proxies) that control access to a network. Network operators sometimes require some authentication, acceptance of terms, or other user interaction before granting access (for example in an internet café or at an airport). They often identify clients who have not done so using their Media Access Control (MAC) addresses.",
+    "causes": [
+      "Captive-portal/guest WiFi requires network sign-in before loading pages",
+      "Corporate network authentication portal intercepting requests",
+      "Credentials required but no browser prompt shown in app/webview"
+    ],
+    "recommended_steps": [
+      "Open the application in a web browser or API client at the affected endpoint",
+      "Reproduce the scenario corresponding to the defect (e.g. perform the exact failing action)",
+      "Inspect the DevTools Network tab or server logs and capture the exact request/response headers"
+    ],
+    "remediation": "Direct clients to the authentication portal; exclude the captive portal IP from app network checks.",
+    "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/511",
+    "keywords": [
+      "511",
+      "network authentication",
+      "captive portal",
+      "wifi login"
+    ]
+  }
+]

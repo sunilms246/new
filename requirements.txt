@@ -1,0 +1,12 @@
+fastapi>=0.110
+uvicorn[standard]>=0.29
+pydantic>=2.6
+scikit-learn>=1.4
+numpy>=1.26
+httpx>=0.27
+# Optional: enable local sentence embeddings (all-MiniLM-L6-v2)
+# sentence-transformers>=2.5
+# Optional: enable LLM fallback (Gemini) for detection + report generation
+# google-genai>=1.0
+# Optional: datasets library for HuggingFace-based MDN data loading
+# datasets>=2.19
