@@ -1,0 +1,13 @@
+# Render Blueprint — deploys the RAG defect-report app as a web service.
+# Docs: https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: http-error-defect-report
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      # Set this in the Render dashboard (Blueprint setup will prompt you).
+      - key: GEMINI_API_KEY
+        sync: false
